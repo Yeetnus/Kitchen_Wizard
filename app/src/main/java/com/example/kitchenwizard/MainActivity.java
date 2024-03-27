@@ -54,14 +54,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button bouton=findViewById(R.id.buttonoui);
-        bouton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String uniqueId = UUID.randomUUID().toString();
-                listItem.add(uniqueId);
-                adapter.notifyDataSetChanged();
-            }
-        });
     }
 }
