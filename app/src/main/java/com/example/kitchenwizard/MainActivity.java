@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
     public void doSomething(String valeur) {
         Intent intent = new Intent(this, Recette.class);
         intent.putExtra("pokemon", valeur);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
                 String valeurSelectionnee = (String) parent.getItemAtPosition(position);
+                System.out.println(valeurSelectionnee);
                 doSomething(valeurSelectionnee);
             }
         });

@@ -21,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Recette"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".Favoris"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".Allergenes"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
