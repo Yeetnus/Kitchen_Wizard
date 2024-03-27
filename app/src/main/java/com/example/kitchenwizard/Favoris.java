@@ -9,6 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 public class Favoris extends Activity {
 
     @Override
@@ -40,7 +45,6 @@ public class Favoris extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.favoris);
-
     }
 
     public void doSomething(View view) {
