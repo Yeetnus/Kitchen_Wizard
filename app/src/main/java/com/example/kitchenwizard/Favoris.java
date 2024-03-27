@@ -1,30 +1,21 @@
 package com.example.kitchenwizard;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Favoris extends AppCompatActivity {
-    public static final String TAG = "MonTagDeLActivité";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,12 +57,16 @@ public class Favoris extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.favoris);
+
+        List<String> listItem = new ArrayList<>();
+        ListView listView = findViewById(R.id.listfavoris);
+        ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, R.layout.list_recette, R.id.textView, listItem);
+        listView.setAdapter(adapter);
+        listItem.add("Cupcake");
+        listItem.add("eclair");
+        listItem.add("macaron");
+        adapter.notifyDataSetChanged();
 
     }
 }

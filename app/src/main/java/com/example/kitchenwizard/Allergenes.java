@@ -66,12 +66,7 @@ public class Allergenes extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.allergenes);
 
     }
 }

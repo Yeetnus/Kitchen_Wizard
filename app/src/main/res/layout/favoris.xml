@@ -4,28 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Favoris">>
+    tools:context=".Favoris"><![CDATA[>
 
-    <LinearLayout
+
+
+    ]]>
+
+    <ListView
+        android:id="@+id/listfavoris"
         android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:background="#927AC1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="55dp">
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </SearchView>
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
