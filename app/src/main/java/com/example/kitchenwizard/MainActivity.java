@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
@@ -16,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MonTagDeLActivité";
@@ -44,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
         ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, R.layout.list_recette, R.id.textView, listItem);
         listView.setAdapter(adapter);
+        listItem.add("Recette 1");
+        listItem.add("Recette 2");
+        listItem.add("Recette 3");
+        adapter.notifyDataSetChanged();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
