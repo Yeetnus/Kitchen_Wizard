@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.recettes) {
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.favoris) {
             Intent intent = new Intent(this, Favoris.class);
