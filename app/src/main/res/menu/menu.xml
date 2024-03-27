@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/allergenes"
         android:title="@string/allergenes"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/recettes"
         android:title="@string/recettes"
         app:showAsAction="always" />
     <item
