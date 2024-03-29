@@ -43,12 +43,13 @@ public class Favoris extends AppCompatActivity {
                 // Récupération des données par le numéro de colonne
                 //long clientID = curs.getLong(0);
                 // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
+                Log.v("Favoris", "id = " + curs.getLong(curs.getColumnIndexOrThrow("id")));
                 return curs.getLong(curs.getColumnIndexOrThrow("id"));
 
             } while (curs.moveToNext());
         }
         else{
-            Toast.makeText(this, "Pas de réponses.....", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Pas de réponses.....", Toast.LENGTH_SHORT).show();
         }
 
         //------------------------------------------------------------ Avec SQL
@@ -60,18 +61,19 @@ public class Favoris extends AppCompatActivity {
             // Parcours des résultats
             do {
                 // Récupération des données par le numéro de colonne
-                //long clientID = curs.getLong(0);
+                //long clientID = c urs.getLong(0);
                 // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
+                Log.v("Favoris", "id = " + cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id")));
                 return cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id"));
 
             } while (cursSQL.moveToNext());
         }
         else{
+            Log.v("Favoris", "Pas de réponses.....");
             return 0;
         }
 
         // ferme la connexion en lecture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
-        //dbR.close();
     }
 
     @Override
