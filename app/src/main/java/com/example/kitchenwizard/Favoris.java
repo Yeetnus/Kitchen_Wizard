@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -149,6 +151,15 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         }
         adapter.notifyDataSetChanged();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
+                Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
+                System.out.println(valeurSelectionnee);
+                doSomething(String.valueOf(valeurSelectionnee));
+            }
+        });
     }
 
     @Override

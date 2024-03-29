@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
     // Attention, si vous réexécutez plusieurs fois le programme il faut d'abord
     // supprimer la BDD ou changer la version (puisque le traitement supprime et recréé la BDD)
-    public void sauveDonnées(SQLClient bdd){
+    /*public void sauveDonnées(SQLClient bdd){
      // Ouverture d'une connexion en écriture
      SQLiteDatabase dbW = bdd.getWritableDatabase();
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
      // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
      dbW.close();
-     }
+     }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
