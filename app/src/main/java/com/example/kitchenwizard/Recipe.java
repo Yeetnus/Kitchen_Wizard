@@ -4,12 +4,12 @@ import java.util.List;
 
 public class Recipe {
     private final String name;
-    private final List<String> ingredients;
+    private final String[] ingredients;
     private final String steps;
-    private final List<String> mesures;
+    private final String[] mesures;
     private final String image;
 
-    public Recipe(String name, List<String> ingredients, List<String> mesures, String steps, String image) {
+    public Recipe(String name, String[] ingredients, String[] mesures, String steps, String image) {
         this.name = name;
         this.ingredients = ingredients;
         this.mesures = mesures;
@@ -21,7 +21,7 @@ public class Recipe {
         return name;
     }
 
-    public List<String> getIngredients() {
+    public String[] getIngredients() {
         return ingredients;
     }
 
@@ -33,7 +33,7 @@ public class Recipe {
         return image;
     }
 
-    public List<String> getMesures() {
+    public String[] getMesures() {
         return mesures;
     }
 }
