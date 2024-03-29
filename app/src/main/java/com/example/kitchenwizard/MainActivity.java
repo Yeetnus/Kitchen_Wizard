@@ -42,30 +42,30 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
     // Attention, si vous réexécutez plusieurs fois le programme il faut d'abord
     // supprimer la BDD ou changer la version (puisque le traitement supprime et recréé la BDD)
-    /**public void sauveDonnées(SQLClient bdd){
-        // Ouverture d'une connexion en écriture
-        SQLiteDatabase dbW = bdd.getWritableDatabase();
+    public void sauveDonnées(SQLClient bdd){
+     // Ouverture d'une connexion en écriture
+     SQLiteDatabase dbW = bdd.getWritableDatabase();
 
-        // Pour pouvoir stocker les données envoyées à la BDD sans utilisation de SQL (Avec SQL- cf plus bas)
-        // Info d'une première personne
-        ContentValues valeursClient1 = new ContentValues();
-        valeursClient1.put("id", "1");
-        // Insertion dans la BDD
-        dbW.insert("Favoris", null, valeursClient1);
+     // Pour pouvoir stocker les données envoyées à la BDD sans utilisation de SQL (Avec SQL- cf plus bas)
+     // Info d'une première personne
+     ContentValues valeursClient1 = new ContentValues();
+     valeursClient1.put("id", "1");
+     // Insertion dans la BDD
+     dbW.insert("Favoris", null, valeursClient1);
 
-        //*************************************************************************
-        // Info d'une deuxième personne
-        ContentValues valeursClient2 = new ContentValues();
-        valeursClient2.put("id", "2");
-        // Insertion dans la BDD
-        dbW.insert("Favoris", null, valeursClient2);
+     //*************************************************************************
+     // Info d'une deuxième personne
+     ContentValues valeursClient2 = new ContentValues();
+     valeursClient2.put("id", "2");
+     // Insertion dans la BDD
+     dbW.insert("Favoris", null, valeursClient2);
 
-        //--------------------------------------------- Utilisation de SQL
-        dbW.execSQL("insert into Favoris values(25);");
+     //--------------------------------------------- Utilisation de SQL
+     dbW.execSQL("insert into Favoris values(25);");
 
-        // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
-        dbW.close();
-    }**/
+     // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
+     dbW.close();
+     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,17 +93,10 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         }
     }
 
-    public void doSomething(String valeur) {
-        Intent intent = new Intent(this, Recette.class);
-        intent.putExtra("pokemon", valeur);
-        startActivity(intent);
-    }
-
     public static Recipe patata(int id) {
         try {
             id+=52772;
             URL url = new URL("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
-            Log.i(TAG, String.valueOf(url));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -131,22 +124,22 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
                 JSONObject meal = mealsArray.getJSONObject(0);
                 String name = meal.getString("strMeal");
                 String imgUrl = meal.getString("strMealThumb");
-                List<String> ingredients = new ArrayList<>();
+                String[] ingredients = new String[20];
                 for (int i = 1; i <= 20; i++) {
                     String ingredient = meal.getString("strIngredient" + i);
                     if (ingredient.isEmpty()) {
                         break;
                     }
-                    ingredients.add(ingredient);
+                    ingredients[i]=ingredient;
                 }
 
-                List<String> mesures= new ArrayList<String>();
+                String[] mesures= new String[20];
                 for (int i = 1; i <= 20; i++) {
                     String mesure = meal.getString("strMeasure" + i);
                     if (mesure.isEmpty()) {
                         break;
                     }
-                    mesures.add(mesure);
+                    mesures[i]=mesure;
                 }
                 String steps = meal.getString("strInstructions");
                 Recipe recette = new Recipe(name, ingredients, mesures, steps, imgUrl);
@@ -192,18 +185,29 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
             thread.start();
         }
         adapter.notifyDataSetChanged();
+        Log.i(TAG, "onCreate: " + listItem.size());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
-                String valeurSelectionnee = (String) parent.getItemAtPosition(position);
+                Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
                 System.out.println(valeurSelectionnee);
                 doSomething(valeurSelectionnee);
             }
         });
 
 
+    }
+
+    public void doSomething(Recipe valeur) {
+        Intent intent = new Intent(this, Recette.class);
+        intent.putExtra("nom", valeur.getName());
+        intent.putExtra("ingredients", valeur.getIngredients());
+        intent.putExtra("mesures", valeur.getMesures());
+        intent.putExtra("steps", valeur.getSteps());
+        intent.putExtra("image", valeur.getImageURL());
+        startActivity(intent);
     }
 
     @Override
