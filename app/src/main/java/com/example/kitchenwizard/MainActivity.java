@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,8 +21,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MonTagDeLActivité";
@@ -58,6 +64,63 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public Recipe patata(int id) {
+        try {
+
+            URL url = new URL("www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+
+            //Getting the response code
+            int responsecode = conn.getResponseCode();
+
+            if (responsecode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responsecode);
+            } else {
+
+                String inline = "";
+                Scanner scanner = new Scanner(url.openStream());
+
+                //Write all the JSON data into a string using a scanner
+                while (scanner.hasNext()) {
+                    inline += scanner.nextLine();
+                }
+
+                //Close the scanner
+                scanner.close();
+
+                //Using the JSON simple library parse the string into a json object
+                JSONObject obj = new JSONObject(inline);
+                String name = obj.getString("strMeal");
+                String imgUrl = obj.getString("strMealThumb");
+                List<String> ingredients = new ArrayList<>();
+                for (int i = 1; i <= 20; i++) {
+                    String ingredient = obj.getString("strIngredient" + i);
+                    if (ingredient.isEmpty()) {
+                        break;
+                    }
+                    ingredients.add(ingredient);
+                }
+                List<String> mesures= new ArrayList<String>();
+                for (int i = 1; i <= 20; i++) {
+                    String mesure = obj.getString("strMeasure" + i);
+                    if (mesure.isEmpty()) {
+                        break;
+                    }
+                    mesures.add(mesure);
+                }
+                String steps = obj.getString("strInstructions");
+                Recipe recette = new Recipe(name, ingredients,mesures,steps, imgUrl);
+                return recette;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +139,10 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
         ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, R.layout.list_recette, R.id.textView, listItem);
         listView.setAdapter(adapter);
-        listItem.add("Recette 1");
-        listItem.add("Recette 2");
-        listItem.add("Recette 3");
+        for(int i = 0; i <= 2; i++) {
+            Recipe recette = patata(52772+i);
+            //Log.d(TAG, recette.getName());
+        }
         adapter.notifyDataSetChanged();
 
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -100,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 doSomething(valeurSelectionnee);
             }
         });
+
 
     }
 }
