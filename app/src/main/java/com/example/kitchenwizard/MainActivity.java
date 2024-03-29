@@ -24,6 +24,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
@@ -32,8 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeFetcher.RecipeListener {
     public static final String TAG = "MonTagDeLActivité";
+    private List<String> listItem = new ArrayList<>();
+    private CustomAdapter adapter;
+    private ArrayAdapter<String> imageAdapter;
 
     private SQLClient bdd;
 
@@ -157,15 +161,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public Recipe patata(int id) {
+    public static Recipe patata(int id) {
         try {
-
-            URL url = new URL("www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
-
+            id+=52772;
+            URL url = new URL("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
+            Log.i(TAG, String.valueOf(url));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.connect();
 
+            conn.connect();
             //Getting the response code
             int responsecode = conn.getResponseCode();
 
@@ -180,32 +184,36 @@ public class MainActivity extends AppCompatActivity {
                 while (scanner.hasNext()) {
                     inline += scanner.nextLine();
                 }
-
                 //Close the scanner
                 scanner.close();
 
                 //Using the JSON simple library parse the string into a json object
                 JSONObject obj = new JSONObject(inline);
-                String name = obj.getString("strMeal");
-                String imgUrl = obj.getString("strMealThumb");
+                JSONArray mealsArray = obj.getJSONArray("meals");
+
+                JSONObject meal = mealsArray.getJSONObject(0);
+                String name = meal.getString("strMeal");
+                String imgUrl = meal.getString("strMealThumb");
                 List<String> ingredients = new ArrayList<>();
                 for (int i = 1; i <= 20; i++) {
-                    String ingredient = obj.getString("strIngredient" + i);
+                    String ingredient = meal.getString("strIngredient" + i);
                     if (ingredient.isEmpty()) {
                         break;
                     }
                     ingredients.add(ingredient);
                 }
+
                 List<String> mesures= new ArrayList<String>();
                 for (int i = 1; i <= 20; i++) {
-                    String mesure = obj.getString("strMeasure" + i);
+                    String mesure = meal.getString("strMeasure" + i);
                     if (mesure.isEmpty()) {
                         break;
                     }
                     mesures.add(mesure);
                 }
-                String steps = obj.getString("strInstructions");
-                Recipe recette = new Recipe(name, ingredients,mesures,steps, imgUrl);
+                String steps = meal.getString("strInstructions");
+                Recipe recette = new Recipe(name, ingredients, mesures, steps, imgUrl);
+                Log.i(TAG, "oui");
                 return recette;
             }
 
@@ -238,26 +246,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        List<String> listItem = new ArrayList<>();
-        ListView listView = (ListView) findViewById(R.id.list);
-        ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, R.layout.list_recette, R.id.textView, listItem);
+        ListView listView = findViewById(R.id.list);
+
+        // Initialize the ArrayAdapter here
+        adapter = new CustomAdapter(this, new ArrayList<>());
+        imageAdapter = new ArrayAdapter<>(this, R.layout.list_recette, R.id.imageView, listItem);
         listView.setAdapter(adapter);
-        for(int i = 0; i <= 2; i++) {
-            Recipe recette = patata(52772+i);
-            //Log.d(TAG, recette.getName());
+
+        // Iterate through the recipes and fetch them
+        for(int i = 0; i <= 10; i++) {
+            Thread thread = new Thread(new RecipeFetcher(i, this));
+            thread.start();
         }
         adapter.notifyDataSetChanged();
 
-        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()){
-            Toast.makeText(this, "Connexion OK", Toast.LENGTH_SHORT).show();
-// Traitement si le réseau est OK
-        }
-        else
-        {
-            Toast.makeText(this, "Pas de Connexion", Toast.LENGTH_SHORT).show();
-        }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -272,6 +274,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRecipeFetched(Recipe recipe) {
+        // Add the fetched recipe name to the listItem
+        runOnUiThread(() -> {
+            listItem.add(recipe.getName());
+            adapter.notifyDataSetChanged();
+        });
     protected void onDestroy() {
         super.onDestroy();
         // FINISH : Ferme l'instance de BDD ainsi que toutes les connexions ouvertes
