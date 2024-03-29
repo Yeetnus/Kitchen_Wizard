@@ -52,13 +52,12 @@ public class CustomAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.imageView);
         TextView textView = convertView.findViewById(R.id.textView);
 
-        String recipeName = ((Recipe) getItem(position)).getName();
         String imageUrl = ((Recipe) getItem(position)).getImageURL();
-
-        // Set the text and image for the current recipe
+        String recipeName =((Recipe) getItem(position)).getName();
         textView.setText(recipeName);
         // Load image from URL using Glide or Picasso
         Picasso.get().load(imageUrl).into(imageView);
+
 
         return convertView;
     }

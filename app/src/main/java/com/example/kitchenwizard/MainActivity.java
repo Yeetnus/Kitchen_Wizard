@@ -35,15 +35,14 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements RecipeFetcher.RecipeListener {
     public static final String TAG = "MonTagDeLActivité";
-    private List<String> listItem = new ArrayList<>();
+    private List<Recipe> listItem = new ArrayList<>();
     private CustomAdapter adapter;
-    private ArrayAdapter<String> imageAdapter;
 
     private SQLClient bdd;
 
     // Attention, si vous réexécutez plusieurs fois le programme il faut d'abord
     // supprimer la BDD ou changer la version (puisque le traitement supprime et recréé la BDD)
-    public void sauveDonnées(SQLClient bdd){
+    /**public void sauveDonnées(SQLClient bdd){
         // Ouverture d'une connexion en écriture
         SQLiteDatabase dbW = bdd.getWritableDatabase();
 
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
         // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
         dbW.close();
-    }
+    }**/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
                 //Using the JSON simple library parse the string into a json object
                 JSONObject obj = new JSONObject(inline);
                 JSONArray mealsArray = obj.getJSONArray("meals");
-
                 JSONObject meal = mealsArray.getJSONObject(0);
                 String name = meal.getString("strMeal");
                 String imgUrl = meal.getString("strMealThumb");
@@ -172,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         this.bdd = new SQLClient(this);
 
         // Illustration de l'écriture de données dans la BDD
-        this.sauveDonnées(bdd);
+        //this.sauveDonnées(bdd);
 
 
         EdgeToEdge.enable(this);
@@ -185,8 +183,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         ListView listView = findViewById(R.id.list);
 
         // Initialize the ArrayAdapter here
-        adapter = new CustomAdapter(this, new ArrayList<>());
-        imageAdapter = new ArrayAdapter<>(this, R.layout.list_recette, R.id.imageView, listItem);
+        adapter = new CustomAdapter(this, listItem);
         listView.setAdapter(adapter);
 
         // Iterate through the recipes and fetch them
@@ -213,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
     public void onRecipeFetched(Recipe recipe) {
         // Add the fetched recipe name to the listItem
         runOnUiThread(() -> {
-            listItem.add(recipe.getName());
+            listItem.add(recipe);
             adapter.notifyDataSetChanged();
         });
     }
