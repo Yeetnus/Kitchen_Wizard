@@ -29,7 +29,7 @@ public class Recipe {
         return steps;
     }
 
-    public String getImage() {
+    public String getImageURL() {
         return image;
     }
 
