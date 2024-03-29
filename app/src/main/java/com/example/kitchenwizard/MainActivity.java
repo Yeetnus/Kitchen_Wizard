@@ -1,7 +1,10 @@
 package com.example.kitchenwizard;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -31,6 +34,96 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MonTagDeLActivité";
+
+    private SQLClient bdd;
+
+    // Attention, si vous réexécutez plusieurs fois le programme il faut d'abord
+    // supprimer la BDD ou changer la version (puisque le traitement supprime et recréé la BDD)
+    public void sauveDonnées(SQLClient bdd){
+        // Ouverture d'une connexion en écriture
+        SQLiteDatabase dbW = bdd.getWritableDatabase();
+
+        // Pour pouvoir stocker les données envoyées à la BDD sans utilisation de SQL (Avec SQL- cf plus bas)
+        // Info d'une première personne
+        ContentValues valeursClient1 = new ContentValues();
+        valeursClient1.put("id", "1");
+        valeursClient1.put("nom", "Chevalier");
+        // Insertion dans la BDD
+        dbW.insert("Clients", null, valeursClient1);
+
+        //*************************************************************************
+        // Info d'une deuxième personne
+        ContentValues valeursClient2 = new ContentValues();
+        valeursClient2.put("id", "2");
+        valeursClient2.put("nom", "Julien");
+        // Insertion dans la BDD
+        dbW.insert("Clients", null, valeursClient2);
+
+        //--------------------------------------------- Utilisation de SQL
+        dbW.execSQL("insert into Clients values(25, 'Roberts');");
+
+        // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
+        dbW.close();
+    }
+
+    public void litDonnées(SQLClient bdd){
+        // Ouverture d'une connexion en lecture
+        SQLiteDatabase dbR = bdd.getWritableDatabase();
+
+        // Sans SQL (cf plus bas pour SQL)
+        String [] critèresDeProjection = {"id", "nom"};
+        String [] critèreDeSélection = {}; // Aucun critère donc tous les enregistrements
+
+        // Ouvre un curseur avec le(s) résultat(s)
+        Cursor curs = dbR.query("Clients", critèresDeProjection, "", critèreDeSélection, null, null, "nom DESC");
+
+        // Traite les réponses contenues dans le curseur
+
+        // Y'a t'il au moins un résultat ?
+        if (curs.moveToFirst()) {
+            // Parcours des résultats
+            do {
+                // Récupération des données par le numéro de colonne
+                //long clientID = curs.getLong(0);
+                // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
+                long clientID = curs.getLong(curs.getColumnIndexOrThrow("id"));
+                // déclenche une exception si la colonne n'existe pas cf doc pour autres méthodes disponibles
+                String clientNOM = curs.getString(curs.getColumnIndexOrThrow("nom"));
+
+                Log.v(MainActivity.TAG, clientID + " - " + clientNOM);
+
+            } while (curs.moveToNext());
+        }
+        else{
+            Toast.makeText(this, "Pas de réponses.....", Toast.LENGTH_SHORT).show();
+        }
+
+        //------------------------------------------------------------ Avec SQL
+        Cursor cursSQL = dbR.rawQuery("select id, nom from Clients order by nom ASC", null);
+
+        // Le traitement des résultats est similaire à haut dessus.
+        // Y'a t'il au moins un résultat ?
+        if (cursSQL.moveToFirst()) {
+            // Parcours des résultats
+            do {
+                // Récupération des données par le numéro de colonne
+                //long clientID = curs.getLong(0);
+                // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
+                long clientID = cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id"));
+                // déclenche une exception si la colonne n'existe pas cf doc pour autres méthodes disponibles
+                String clientNOM = cursSQL.getString(cursSQL.getColumnIndexOrThrow("nom"));
+
+                Log.v(MainActivity.TAG, clientID + " - " + clientNOM);
+
+            } while (cursSQL.moveToNext());
+        }
+        else{
+            Toast.makeText(this, "Pas de réponses.....", Toast.LENGTH_SHORT).show();
+        }
+
+        // ferme la connexion en lecture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
+        //dbR.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,6 +221,16 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        this.bdd = new SQLClient(this);
+
+        // Illustration de l'écriture de données dans la BDD
+        this.sauveDonnées(bdd);
+
+        //########################################################################
+        // Illustration de la lecture de données dans la BDD
+        this.litDonnées(bdd);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -166,5 +269,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // FINISH : Ferme l'instance de BDD ainsi que toutes les connexions ouvertes
+        bdd.close();
     }
 }
