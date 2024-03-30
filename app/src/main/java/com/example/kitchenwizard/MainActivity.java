@@ -1,5 +1,6 @@
 package com.example.kitchenwizard;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -196,8 +198,23 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
                 doSomething(valeurSelectionnee);
             }
         });
+        SearchView searchView = findViewById(R.id.chercher);
 
+// Set a query listener to perform search when text changes
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Perform search operation here (e.g., filter your list)
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Perform search operation as the text changes
+                // Filter your list based on the newText and update the UI
+                return true;
+            }
+        });
     }
 
     public void doSomething(Recipe valeur) {

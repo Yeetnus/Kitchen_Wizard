@@ -97,10 +97,10 @@ public class Recette  extends Activity {
                 switch (checkedId) {
                     //case radio:
                         // Do something when radio button 1 is checked
-                        break;
+                        //break;
                     //case radio2:
                         // Do something when radio button 2 is checked
-                        break;
+                        //break;
                     // Add more cases for additional radio buttons if needed
                 }
             }
