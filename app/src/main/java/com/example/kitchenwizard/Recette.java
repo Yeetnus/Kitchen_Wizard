@@ -9,6 +9,8 @@ import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -84,6 +86,25 @@ public class Recette  extends Activity {
                 }
             }
         }
+        RadioButton radio = findViewById(R.id.radioButton2);
+        RadioButton radio2 = findViewById(R.id.radioButton);
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the ID of the checked radio button
+                switch (checkedId) {
+                    //case radio:
+                        // Do something when radio button 1 is checked
+                        break;
+                    //case radio2:
+                        // Do something when radio button 2 is checked
+                        break;
+                    // Add more cases for additional radio buttons if needed
+                }
+            }
+        });
     }
 
     public int getNb(String s) {
