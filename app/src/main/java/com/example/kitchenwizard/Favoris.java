@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,14 +18,24 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Favoris extends AppCompatActivity {
+public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeListener{
+
+    public static final String TAG = "Favoris";
+    private List<Recipe> listItem = new ArrayList<>();
+    private CustomAdapter adapter;
 
     private SQLClient bdd;
 
-    public long litDonnées(SQLClient bdd){
+    public List<String> litDonnées(SQLClient bdd){
         // Ouverture d'une connexion en lecture
         SQLiteDatabase dbR = bdd.getWritableDatabase();
 
@@ -43,8 +55,8 @@ public class Favoris extends AppCompatActivity {
                 // Récupération des données par le numéro de colonne
                 //long clientID = curs.getLong(0);
                 // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
-                Log.v("Favoris", "id = " + curs.getLong(curs.getColumnIndexOrThrow("id")));
-                return curs.getLong(curs.getColumnIndexOrThrow("id"));
+                Log.v(TAG, "id = " + curs.getLong(curs.getColumnIndexOrThrow("id")));
+                curs.getLong(curs.getColumnIndexOrThrow("id"));
 
             } while (curs.moveToNext());
         }
@@ -55,6 +67,7 @@ public class Favoris extends AppCompatActivity {
         //------------------------------------------------------------ Avec SQL
         Cursor cursSQL = dbR.rawQuery("select id from Favoris order by id ASC", null);
 
+        List<String> listIDRecette = new ArrayList<>();
         // Le traitement des résultats est similaire à haut dessus.
         // Y'a t'il au moins un résultat ?
         if (cursSQL.moveToFirst()) {
@@ -63,17 +76,18 @@ public class Favoris extends AppCompatActivity {
                 // Récupération des données par le numéro de colonne
                 //long clientID = c urs.getLong(0);
                 // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
-                Log.v("Favoris", "id = " + cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id")));
-                return cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id"));
+                Log.v(TAG, "id = " + cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id")));
+                listIDRecette.add(String.valueOf(cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id"))));
 
             } while (cursSQL.moveToNext());
         }
         else{
             Log.v("Favoris", "Pas de réponses.....");
-            return 0;
+            return null;
         }
 
         // ferme la connexion en lecture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
+        return listIDRecette;
     }
 
     @Override
@@ -108,7 +122,6 @@ public class Favoris extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,19 +135,38 @@ public class Favoris extends AppCompatActivity {
 
         //########################################################################
         // Illustration de la lecture de données dans la BDD
-        long listeFavoris = this.litDonnées(bdd);
+        List<String> listeFavoris = this.litDonnées(bdd);
+        Log.v("Favoris", "listeFavoris = " + listeFavoris);
 
-        if (listeFavoris == 0) {
-            Toast.makeText(this, "Il n'y a pas de favoris enregistré.", Toast.LENGTH_SHORT).show();
-        }
-        List<String> listItem = new ArrayList<>();
         ListView listView = findViewById(R.id.listfavoris);
-        ArrayAdapter<String> adapter =  new ArrayAdapter<>(this, R.layout.list_recette, R.id.textView, listItem);
+
+        // Initialize the ArrayAdapter here
+        adapter = new CustomAdapter(this, listItem);
         listView.setAdapter(adapter);
-        listItem.add("Cupcake");
-        listItem.add("eclair");
-        listItem.add("macaron");
+
+        // Fetch the recipe
+        for (String id : listeFavoris) {
+            RecipeFetcher fetcher = new RecipeFetcher(Integer.parseInt(id), this);
+            new Thread(fetcher).start();
+        }
         adapter.notifyDataSetChanged();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
+                Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
+                System.out.println(valeurSelectionnee);
+                doSomething(String.valueOf(valeurSelectionnee));
+            }
+        });
+    }
+
+    @Override
+    public void onRecipeFetched(Recipe recipe) {
+        runOnUiThread(() -> {
+            listItem.add(recipe);
+            adapter.notifyDataSetChanged();
+        });
     }
 }
