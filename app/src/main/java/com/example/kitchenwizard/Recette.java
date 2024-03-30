@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,6 +34,19 @@ public class Recette  extends Activity {
         ListView list1 = findViewById(R.id.list1);
         ListView list2 = findViewById(R.id.list2);
 
+        list1.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {}
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // Get the first visible position of listView1
+                int firstVisiblePosition = list1.getFirstVisiblePosition();
+                // Scroll listView2 to the same position
+                list2.setSelection(firstVisiblePosition);
+            }
+        });
+
         RecetteAdapter adapter1 = new RecetteAdapter(this, listItem1);
         RecetteAdapter adapter2 = new RecetteAdapter(this, listItem2);
 
@@ -46,9 +60,19 @@ public class Recette  extends Activity {
                 int b = getNb(getIntent().getStringArrayExtra("mesures")[i]);
                 Log.i(TAG, "Quantité: " + b);
                 String c = " ";
-                if (getIntent().getStringArrayExtra("mesures")[i].length() >= 5) {
-                    if()
-                    c = getIntent().getStringArrayExtra("mesures")[i].substring(2);
+                String quantitéIngredient = getIntent().getStringArrayExtra("mesures")[i];
+                if (quantitéIngredient.length() >= 3) {
+                    if(Character.isDigit(quantitéIngredient.charAt(2))) {
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(3);
+                        Log.i("oui", "c: " + c);
+                    }else if(Character.isDigit(quantitéIngredient.charAt(1))){
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(2);
+                        Log.i("oui", "c: " + c);
+                    }else if(Character.isDigit(quantitéIngredient.charAt(0))){
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(1);
+                    }else{
+                        c = getIntent().getStringArrayExtra("mesures")[i];
+                    }
                 }
                 Log.i(TAG, "mesure: " + c);
                 if(i%2==1) {
@@ -71,7 +95,6 @@ public class Recette  extends Activity {
                 break;
             }
         }
-        Log.i("oui", qte);
         if (qte.length() > 2) {
             if (qte.charAt(2) == '/') {
                 return Integer.parseInt("" + qte.charAt(0)) / Integer.parseInt("" + qte.charAt(2));
@@ -81,7 +104,7 @@ public class Recette  extends Activity {
         } else if(qte.length() >= 1){
             return Integer.parseInt(qte);
         }
-        return 0;
+        return 1;
     }
 
     public void doSomething() {
