@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +75,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         }
         else{
             Log.v("Favoris", "Pas de réponses.....");
-            return null;
+            return listIDRecette;
         }
 
         // ferme la connexion en lecture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
@@ -132,28 +133,30 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         List<Integer> listeFavoris = this.litDonnées(bdd);
         Log.v("Favoris", "listeFavoris = " + listeFavoris);
 
-        ListView listView = findViewById(R.id.listfavoris);
+        if(!listeFavoris.isEmpty()) {
+            ListView listView = findViewById(R.id.listfavoris);
 
-        // Initialize the ArrayAdapter here
-        adapter = new CustomAdapter(this, listItem);
-        listView.setAdapter(adapter);
-
-        // Fetch the recipe
-        for (int id : listeFavoris) {
-            RecipeFetcher fetcher = new RecipeFetcher(id, this);
-            new Thread(fetcher).start();
-        }
-        adapter.notifyDataSetChanged();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
-                Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
-                System.out.println(valeurSelectionnee);
-                doSomething(valeurSelectionnee);
+            // Initialize the ArrayAdapter here
+            adapter = new CustomAdapter(this, listItem);
+            listView.setAdapter(adapter);
+            for (int id : listeFavoris) {
+                RecipeFetcher fetcher = new RecipeFetcher(id, this);
+                new Thread(fetcher).start();
             }
-        });
+            adapter.notifyDataSetChanged();
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
+                    Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
+                    System.out.println(valeurSelectionnee);
+                    doSomething(valeurSelectionnee);
+                }
+            });
+        } else {
+            Toast.makeText(this, "Pas de recettes en favoris", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
