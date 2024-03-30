@@ -42,34 +42,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
     private ListView listView;
     private CustomAdapter adapter;
 
-    private SQLClient bdd;
-
-    // Attention, si vous réexécutez plusieurs fois le programme il faut d'abord
-    // supprimer la BDD ou changer la version (puisque le traitement supprime et recréé la BDD)
-    /*public void sauveDonnées(SQLClient bdd){
-     // Ouverture d'une connexion en écriture
-     SQLiteDatabase dbW = bdd.getWritableDatabase();
-
-     // Pour pouvoir stocker les données envoyées à la BDD sans utilisation de SQL (Avec SQL- cf plus bas)
-     // Info d'une première personne
-     ContentValues valeursClient1 = new ContentValues();
-     valeursClient1.put("id", "1");
-     // Insertion dans la BDD
-     dbW.insert("Favoris", null, valeursClient1);
-
-     //*************************************************************************
-     // Info d'une deuxième personne
-     ContentValues valeursClient2 = new ContentValues();
-     valeursClient2.put("id", "2");
-     // Insertion dans la BDD
-     dbW.insert("Favoris", null, valeursClient2);
-
-     //--------------------------------------------- Utilisation de SQL
-     dbW.execSQL("insert into Favoris values(25);");
-
-     // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
-     dbW.close();
-     }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
     public static Recipe patata(int id) {
         try {
             id+=52772;
+            Log.v(TAG, "id: " + id);
             URL url = new URL("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + id);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -146,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
                     mesures[i]=mesure;
                 }
                 String steps = meal.getString("strInstructions");
-                Recipe recette = new Recipe(name, ingredients, mesures, steps, imgUrl);
+                Recipe recette = new Recipe(id, name, ingredients, mesures, steps, imgUrl);
                 Log.i(TAG, "oui");
                 return recette;
             }
@@ -163,12 +136,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
-        this.bdd = new SQLClient(this);
-
-        // Illustration de l'écriture de données dans la BDD
-        //this.sauveDonnées(bdd);
-
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -232,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
     public void doSomething(Recipe valeur) {
         Intent intent = new Intent(this, Recette.class);
+        intent.putExtra("id", valeur.getId());
         intent.putExtra("nom", valeur.getName());
         intent.putExtra("ingredients", valeur.getIngredients());
         intent.putExtra("mesures", valeur.getMesures());
@@ -247,10 +215,5 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
             listItem.add(recipe);
             adapter.notifyDataSetChanged();
         });
-    }
-    protected void onDestroy() {
-        super.onDestroy();
-        // FINISH : Ferme l'instance de BDD ainsi que toutes les connexions ouvertes
-        bdd.close();
     }
 }

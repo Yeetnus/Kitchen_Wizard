@@ -1,6 +1,5 @@
 package com.example.kitchenwizard;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,21 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeListener{
 
@@ -35,7 +26,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
 
     private SQLClient bdd;
 
-    public List<String> litDonnées(SQLClient bdd){
+    public List<Integer> litDonnées(SQLClient bdd){
         // Ouverture d'une connexion en lecture
         SQLiteDatabase dbR = bdd.getWritableDatabase();
 
@@ -67,7 +58,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         //------------------------------------------------------------ Avec SQL
         Cursor cursSQL = dbR.rawQuery("select id from Favoris order by id ASC", null);
 
-        List<String> listIDRecette = new ArrayList<>();
+        List<Integer> listIDRecette = new ArrayList<>();
         // Le traitement des résultats est similaire à haut dessus.
         // Y'a t'il au moins un résultat ?
         if (cursSQL.moveToFirst()) {
@@ -77,7 +68,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
                 //long clientID = c urs.getLong(0);
                 // ou avec le nom de la colonne (sans doute à privilégier pour la relecture du code)
                 Log.v(TAG, "id = " + cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id")));
-                listIDRecette.add(String.valueOf(cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id"))));
+                listIDRecette.add((int) cursSQL.getLong(cursSQL.getColumnIndexOrThrow("id")));
 
             } while (cursSQL.moveToNext());
         }
@@ -116,9 +107,14 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         }
     }
 
-    public void doSomething(String valeur) {
+    public void doSomething(Recipe valeur) {
         Intent intent = new Intent(this, Recette.class);
-        intent.putExtra("pokemon", valeur);
+        intent.putExtra("id", valeur.getId());
+        intent.putExtra("nom", valeur.getName());
+        intent.putExtra("ingredients", valeur.getIngredients());
+        intent.putExtra("mesures", valeur.getMesures());
+        intent.putExtra("steps", valeur.getSteps());
+        intent.putExtra("image", valeur.getImageURL());
         startActivity(intent);
     }
 
@@ -133,9 +129,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
 
         this.bdd = new SQLClient(this);
 
-        //########################################################################
-        // Illustration de la lecture de données dans la BDD
-        List<String> listeFavoris = this.litDonnées(bdd);
+        List<Integer> listeFavoris = this.litDonnées(bdd);
         Log.v("Favoris", "listeFavoris = " + listeFavoris);
 
         ListView listView = findViewById(R.id.listfavoris);
@@ -145,8 +139,8 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
         listView.setAdapter(adapter);
 
         // Fetch the recipe
-        for (String id : listeFavoris) {
-            RecipeFetcher fetcher = new RecipeFetcher(Integer.parseInt(id), this);
+        for (int id : listeFavoris) {
+            RecipeFetcher fetcher = new RecipeFetcher(id, this);
             new Thread(fetcher).start();
         }
         adapter.notifyDataSetChanged();
@@ -157,7 +151,7 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
                 // Récupérer l'élément sélectionné à partir de l'adaptateur de la liste
                 Recipe valeurSelectionnee = (Recipe) parent.getItemAtPosition(position);
                 System.out.println(valeurSelectionnee);
-                doSomething(String.valueOf(valeurSelectionnee));
+                doSomething(valeurSelectionnee);
             }
         });
     }

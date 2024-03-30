@@ -1,7 +1,9 @@
 package com.example.kitchenwizard;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,9 +26,27 @@ public class Recette  extends Activity {
     private static final String TAG = "Recette";
     private List<String> listItem1 = new ArrayList<>();
     private List<String> listItem2 = new ArrayList<>();
+    private SQLClient bdd;
+    public void sauveDonnées(SQLClient bdd, int id){
+        // Ouverture d'une connexion en écriture
+        SQLiteDatabase dbW = bdd.getWritableDatabase();
+        try {
+            id-=52772;
+            dbW.execSQL();
+            dbW.execSQL("INSERT INTO Favoris (id) VALUES (" + id + ")");
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de l'insertion dans la BDD", e);
+
+            Toast.makeText(this, "Cette recette est déjà en favoris", Toast.LENGTH_SHORT).show();
+        }
+
+        // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
+        dbW.close();
+    }
     @Override protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recette);
+        this.bdd = new SQLClient(this);
         TextView nom = findViewById(R.id.textView2);
         TextView steps = findViewById(R.id.textView4);
         nom.setText(getIntent().getStringExtra("nom"));
@@ -105,7 +126,18 @@ public class Recette  extends Activity {
                 }
             }
         });
+
+        Button bouton = (Button)findViewById(R.id.addFavoris);
+        bouton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add the recipe to the favorites
+                int id = getIntent().getIntExtra("id", 0);
+                sauveDonnées(bdd, id);
+            }
+        });
     }
+
 
     public int getNb(String s) {
         String qte = "";

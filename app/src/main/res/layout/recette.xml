@@ -78,7 +78,7 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="378dp"
+        android:layout_width="wrap_content"
         android:layout_height="249dp"
         android:layout_marginTop="92dp"
         android:text="TextView"
@@ -88,4 +88,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.493" />
+
+    <Button
+        android:id="@+id/addFavoris"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="7dp"
+        android:drawableEnd="@android:drawable/btn_star_big_off"
+        android:text="@string/favoris"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

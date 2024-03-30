@@ -13,7 +13,7 @@ class SQLClient extends SQLiteOpenHelper {
     public static final String  DATABASE_FILE = "recettes.db";
 
     // Requete de creation de la bdd (exemple simplifié)
-    public static final String SQL_CREATE = "CREATE TABLE IF NOT EXISTS Favoris (id VARCHAR(255) PRIMARY KEY);";
+    public static final String SQL_CREATE = "CREATE TABLE IF NOT EXISTS Favoris (id int PRIMARY KEY);";
 
     // Requete de suppression de la bdd (exemple simplifié)
     public static final String SQL_DELETE = "DROP TABLE IF EXISTS  Favoris ;";
