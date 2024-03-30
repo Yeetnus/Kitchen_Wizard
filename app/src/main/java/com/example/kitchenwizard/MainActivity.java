@@ -37,7 +37,9 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements RecipeFetcher.RecipeListener {
     public static final String TAG = "MonTagDeLActivité";
-    private List<Recipe> listItem = new ArrayList<>();
+    private static final List<Recipe> listItem = new ArrayList<>();
+    private List<Recipe> listFiltre = new ArrayList<>();
+    private ListView listView;
     private CustomAdapter adapter;
 
     private SQLClient bdd;
@@ -175,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ListView listView = findViewById(R.id.list);
+        listView = findViewById(R.id.list);
 
         // Initialize the ArrayAdapter here
         adapter = new CustomAdapter(this, listItem);
@@ -200,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         });
         SearchView searchView = findViewById(R.id.chercher);
 
-// Set a query listener to perform search when text changes
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -210,8 +211,20 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Perform search operation as the text changes
-                // Filter your list based on the newText and update the UI
+                List<Recipe> listTruc = new ArrayList<>(listItem); // Create a copy of listItem
+                listFiltre.clear();
+                if (!newText.isEmpty()) {
+                    // Filter the copied list based on the search query
+                    for (Recipe item : listTruc) {
+                        if (item.getName().toLowerCase().contains(newText.toLowerCase())) {
+                            listFiltre.add(item);
+                        }
+                    }
+                }else{
+                    listFiltre.addAll(listItem);
+                }
+
+                listView.setAdapter(new CustomAdapter(MainActivity.this, listFiltre));
                 return true;
             }
         });
