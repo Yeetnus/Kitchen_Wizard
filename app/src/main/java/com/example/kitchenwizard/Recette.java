@@ -32,7 +32,6 @@ public class Recette  extends Activity {
         SQLiteDatabase dbW = bdd.getWritableDatabase();
         try {
             id-=52772;
-            dbW.execSQL();
             dbW.execSQL("INSERT INTO Favoris (id) VALUES (" + id + ")");
         } catch (Exception e) {
             Log.e(TAG, "Erreur lors de l'insertion dans la BDD", e);
