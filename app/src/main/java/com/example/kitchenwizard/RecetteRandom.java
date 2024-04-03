@@ -52,7 +52,7 @@ public class RecetteRandom extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.allergenes);
+        setContentView(R.layout.recetterandom);
 
     }
 }
