@@ -11,8 +11,8 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RecetteRandom extends AppCompatActivity {
-    public static final String TAG = "RecetteRandom";
+public class Random extends AppCompatActivity {
+    public static final String TAG = "Random";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,14 +54,17 @@ public class RecetteRandom extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.recetterandom);
+        setContentView(R.layout.random);
 
-        Button bouton = (Button)findViewById(R.id.buttonRandom);
-        bouton.setOnClickListener(new View.OnClickListener() {
+        Button reroll = (Button)findViewById(R.id.reroll);
+        reroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent=new Intent(RecetteRandom.this,Random.class);
-                startActivityForResult(intent, 2);// Activity is started with requestCode 2
+                String message=editText1.getText().toString();
+                Intent intent=new Intent();
+                intent.putExtra("MESSAGE",message);
+                setResult(2,intent);
+                finish();//finishing activity
             }
         });
     }

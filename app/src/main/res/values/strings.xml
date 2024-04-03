@@ -2,5 +2,6 @@
     <string name="app_name">Kitchen Wizard</string>
     <string name="favoris">Favoris</string>
     <string name="recettes">Recettes</string>
-    <string name="allergenes">Allergenes</string>
+    <string name="random">Random</string>
+    <string name="idee">Vous n\'avez pas d\'idée de recette ?</string>
 </resources>

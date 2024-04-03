@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.allergenes) {
+        if (item.getItemId() == R.id.recetteRandom) {
             Intent intent = new Intent(this, RecetteRandom.class);
             startActivity(intent);
             return true;

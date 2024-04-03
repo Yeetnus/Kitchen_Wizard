@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/allergenes"
-        android:title="@string/allergenes"
+        android:id="@+id/recetteRandom"
+        android:title="@string/random"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/recettes"
