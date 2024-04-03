@@ -1,13 +1,6 @@
 package com.example.kitchenwizard;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,10 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.allergenes) {
-            Intent intent = new Intent(this, Allergenes.class);
+            Intent intent = new Intent(this, RecetteRandom.class);
             startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.recettes) {

@@ -32,7 +32,7 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".Allergenes"
+            android:name=".RecetteRandom"
             android:exported="true">
         </activity>
     </application>

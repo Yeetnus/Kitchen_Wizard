@@ -1,29 +1,15 @@
 package com.example.kitchenwizard;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Allergenes extends AppCompatActivity {
+public class RecetteRandom extends AppCompatActivity {
     public static final String TAG = "MonTagDeLActivité";
 
     @Override
@@ -36,7 +22,7 @@ public class Allergenes extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.allergenes) {
-            Intent intent = new Intent(this, Allergenes.class);
+            Intent intent = new Intent(this, RecetteRandom.class);
             startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.recettes) {
