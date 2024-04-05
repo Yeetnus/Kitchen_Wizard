@@ -85,6 +85,14 @@ public class Recette  extends Activity {
                 sauveDonnées(bdd, id);
             }
         });
+
+        Button boutonRetour = (Button)findViewById(R.id.retour);
+        boutonRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void ingredientsRecette(int nbPersonnes) {
@@ -100,6 +108,10 @@ public class Recette  extends Activity {
                 Log.i(TAG, "Quantité: " + b);
                 String c = " ";
                 String quantitéIngredient = getIntent().getStringArrayExtra("mesures")[i];
+                if(nbPersonnes>=4 && quantitéIngredient.charAt(0)=='\u00bd'){
+                    quantitéIngredient="1"+quantitéIngredient.substring(1);
+                    b=1;
+                }
                 if (quantitéIngredient.length() >= 3) {
                     if (Character.isDigit(quantitéIngredient.charAt(2))) {
                         c = getIntent().getStringArrayExtra("mesures")[i].substring(3);
@@ -113,10 +125,14 @@ public class Recette  extends Activity {
                         c = getIntent().getStringArrayExtra("mesures")[i];
                     }
                 }
-                if (i % 2 == 1) {
-                    listItem1.add(nomIngredient + " : " + b + " " + c+"                  ");
-                } else {
-                    listItem2.add(nomIngredient + " : " + b + " " + c+"                  ");
+                if (i % 2 == 1 && b==0) {
+                    listItem1.add(nomIngredient + " : " + c);
+                } else if(i % 2 == 1) {
+                    listItem1.add(nomIngredient + " : " + b + " " + c);
+                }else if(b==0 && i % 2 == 0) {
+                    listItem2.add(nomIngredient + " : " + c);
+                }else{
+                    listItem2.add(nomIngredient + " : " + b + " " + c);
                 }
                 adapter1.notifyDataSetChanged();
             }
@@ -142,7 +158,7 @@ public class Recette  extends Activity {
         } else if(qte.length() >= 1){
             return Integer.parseInt(qte);
         }
-        return 1;
+        return 0;
     }
 
     public void doSomething() {
