@@ -3,6 +3,7 @@ package com.example.kitchenwizard;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Recette  extends Activity {
     private static final String TAG = "Recette";
@@ -46,6 +48,11 @@ public class Recette  extends Activity {
     @Override protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recette);
+        // Detect system language
+        String lang = Locale.getDefault().getLanguage();
+
+        // Set locale to desired language
+        setLocale(lang);
         this.bdd = new SQLClient(this);
         TextView nom = findViewById(R.id.textView2);
         TextView steps = findViewById(R.id.textView4);
@@ -137,6 +144,14 @@ public class Recette  extends Activity {
                 adapter1.notifyDataSetChanged();
             }
         }
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
 
