@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         listView.setAdapter(adapter);
 
         // Iterate through the recipes and fetch them
-        for(int i = 0; i <= 10; i++) {
+        for(int i = 0; i <= 30; i++) {
             Thread thread = new Thread(new RecipeFetcher(i, this));
             thread.start();
         }
