@@ -1,4 +1,4 @@
-/**package com.example.kitchenwizard;
+package com.example.kitchenwizard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,9 +40,14 @@ public class RecetteRandom extends AppCompatActivity {
         }
     }
 
-    /*public void doSomething(String valeur) {
-        Intent intent = new Intent(this, Recette.class);
-        intent.putExtra("pokemon", valeur);
+    public void doSomething(String valeur) {
+        Intent intent = new Intent(this, Random.class);
+        intent.putExtra("id", valeur.getId());
+        intent.putExtra("nom", valeur.getName());
+        intent.putExtra("ingredients", valeur.getIngredients());
+        intent.putExtra("mesures", valeur.getMesures());
+        intent.putExtra("steps", valeur.getSteps());
+        intent.putExtra("image", valeur.getImageURL());
         startActivity(intent);
     }
 
@@ -72,4 +77,4 @@ public class RecetteRandom extends AppCompatActivity {
         if(requestCode==2) {
         }
     }
-}*/
+}
