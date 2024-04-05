@@ -2,32 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E8D9BD">
-
-    <Button
-        android:id="@+id/OK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Je veux !"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <Button
-        android:id="@+id/PASOK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="8dp"
-        android:text="Une autre"
-        app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0.379"
-        app:layout_constraintStart_toEndOf="@+id/OK"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -109,13 +86,13 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.493" />
 
-    <Button
-        android:id="@+id/retour"
+    <TextView
+        android:id="@+id/popupChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@android:drawable/ic_media_previous"
-        android:text="Retour"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="25dp"
+        android:text="Faites votre choix !"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

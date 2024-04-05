@@ -92,21 +92,16 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.recetteRandom) {
-            //Intent intent = new Intent(this, RecetteRandom.class);
-            //startActivity(intent);
-            //return true;
-        } else if (item.getItemId() == R.id.recettes) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, RecetteRandom.class);
             startActivity(intent);
             return true;
-        } else if (item.getItemId() == R.id.favoris) {
-            Intent intent = new Intent(this, Favoris.class);
+        } else if (item.getItemId() == R.id.recettes) {
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     public void doSomething(Recipe valeur) {

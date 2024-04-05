@@ -35,6 +35,10 @@
             android:name=".RecetteRandom"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".Random"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
