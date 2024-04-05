@@ -1,6 +1,7 @@
 package com.example.kitchenwizard;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -22,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Random extends AppCompatActivity {
     public static final String TAG = "Random";
@@ -43,6 +45,8 @@ public class Random extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.random);
+        String lang = Locale.getDefault().getLanguage();
+        setLocale(lang);
 
         TextView nom = findViewById(R.id.textView2);
         TextView steps = findViewById(R.id.textView4);
@@ -169,5 +173,13 @@ public class Random extends AppCompatActivity {
             return Integer.parseInt(qte);
         }
         return 0;
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

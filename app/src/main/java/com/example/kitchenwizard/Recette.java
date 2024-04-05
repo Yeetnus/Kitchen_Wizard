@@ -48,10 +48,7 @@ public class Recette  extends Activity {
     @Override protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recette);
-        // Detect system language
         String lang = Locale.getDefault().getLanguage();
-
-        // Set locale to desired language
         setLocale(lang);
         this.bdd = new SQLClient(this);
         TextView nom = findViewById(R.id.textView2);

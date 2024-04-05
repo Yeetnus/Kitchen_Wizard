@@ -1,6 +1,7 @@
 package com.example.kitchenwizard;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeListener{
 
@@ -122,8 +124,10 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         EdgeToEdge.enable(this);
-        setContentView(R.layout.favoris);
 
+        setContentView(R.layout.favoris);
+        String lang = Locale.getDefault().getLanguage();
+        setLocale(lang);
         this.bdd = new SQLClient(this);
 
         List<Integer> listeFavoris = this.litDonnées(bdd);
@@ -161,5 +165,13 @@ public class Favoris extends AppCompatActivity implements RecipeFetcher.RecipeLi
             listItem.add(recipe);
             adapter.notifyDataSetChanged();
         });
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

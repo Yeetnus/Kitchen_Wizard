@@ -1,6 +1,7 @@
 package com.example.kitchenwizard;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,15 +20,12 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class RecetteRandom extends AppCompatActivity implements RandomRecipeFetcher.RecipeListener{
     public static final String TAG = "RecetteRandom";
     private SQLClient bdd;
-    private List<Recipe> listItem = new ArrayList<>();
-    private CustomAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,11 +69,9 @@ public class RecetteRandom extends AppCompatActivity implements RandomRecipeFetc
         }
         EdgeToEdge.enable(this);
         setContentView(R.layout.recetterandom);
+        String lang = Locale.getDefault().getLanguage();
+        setLocale(lang);
         this.bdd = new SQLClient(this);
-        ListView listView = findViewById(R.id.listRandom);
-        adapter = new CustomAdapter(this, listItem);
-        listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         Button bouton = (Button)findViewById(R.id.buttonRandom);
         bouton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,5 +175,13 @@ public class RecetteRandom extends AppCompatActivity implements RandomRecipeFetc
 
         // ferme la connexion en écriture à la BDD -- à vous de voir s'il faut ou non conserver la connexion ouverte ... Attention aux ressources...
         dbW.close();
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

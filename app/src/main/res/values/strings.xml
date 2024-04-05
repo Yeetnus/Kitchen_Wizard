@@ -4,8 +4,11 @@
     <string name="recettes">Recettes</string>
     <string name="random">Random</string>
     <string name="idee">Vous n\'avez pas d\'idée de recette ?</string>
+    <string name="ideeen">Can't think of a recipe?</string>
     <string name="recipes">recipes</string>
     <string name="favourites" />
     <string name="favorites">favorites</string>
     <string name="favourite">Favorites</string>
+    <string name="appuyez_ici">Appuyez ici !</string>
+    <string name="appuyez_icii">Press here!</string>
 </resources>
