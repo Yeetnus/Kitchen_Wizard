@@ -1,6 +1,7 @@
 package com.example.kitchenwizard;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements RecipeFetcher.RecipeListener {
@@ -136,6 +138,11 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Detect system language
+        String lang = Locale.getDefault().getLanguage();
+
+        // Set locale to desired language
+        setLocale(lang);
         listView = findViewById(R.id.list);
 
         // Initialize the ArrayAdapter here
@@ -187,6 +194,14 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
                 return true;
             }
         });
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
     public void doSomething(Recipe valeur) {
