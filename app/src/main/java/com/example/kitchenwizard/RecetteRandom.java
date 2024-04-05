@@ -1,4 +1,4 @@
-package com.example.kitchenwizard;
+/**package com.example.kitchenwizard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ public class RecetteRandom extends AppCompatActivity {
         Intent intent = new Intent(this, Recette.class);
         intent.putExtra("pokemon", valeur);
         startActivity(intent);
-    }*/
+    }
 
 
     @Override
@@ -72,4 +72,4 @@ public class RecetteRandom extends AppCompatActivity {
         if(requestCode==2) {
         }
     }
-}
+}*/

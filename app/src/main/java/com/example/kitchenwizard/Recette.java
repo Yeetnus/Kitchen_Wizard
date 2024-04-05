@@ -26,6 +26,7 @@ public class Recette  extends Activity {
     private static final String TAG = "Recette";
     private List<String> listItem1 = new ArrayList<>();
     private List<String> listItem2 = new ArrayList<>();
+    private RecetteAdapter adapter1;
     private SQLClient bdd;
     public void sauveDonnées(SQLClient bdd, int id){
         // Ouverture d'une connexion en écriture
@@ -54,74 +55,23 @@ public class Recette  extends Activity {
         steps.setText(getIntent().getStringExtra("steps"));
 
         ListView list1 = findViewById(R.id.list1);
-        ListView list2 = findViewById(R.id.list2);
 
-        list1.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {}
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                // Get the first visible position of listView1
-                int firstVisiblePosition = list1.getFirstVisiblePosition();
-                // Scroll listView2 to the same position
-                list2.setSelection(firstVisiblePosition);
-            }
-        });
-
-        RecetteAdapter adapter1 = new RecetteAdapter(this, listItem1);
-        RecetteAdapter adapter2 = new RecetteAdapter(this, listItem2);
+        adapter1 = new RecetteAdapter(this, listItem1,listItem2);
 
         list1.setAdapter(adapter1);
-        list2.setAdapter(adapter2);
-        for(int i=1;i<getIntent().getStringArrayExtra("ingredients").length; i++) {
-            if(getIntent().getStringArrayExtra("ingredients")[i]!=null) {
-                TextView textView = new TextView(this);
-                String nomIngredient = getIntent().getStringArrayExtra("ingredients")[i];
-                Log.i(TAG, "ingredient: " + nomIngredient);
-                int b = getNb(getIntent().getStringArrayExtra("mesures")[i]);
-                Log.i(TAG, "Quantité: " + b);
-                String c = " ";
-                String quantitéIngredient = getIntent().getStringArrayExtra("mesures")[i];
-                if (quantitéIngredient.length() >= 3) {
-                    if(Character.isDigit(quantitéIngredient.charAt(2))) {
-                        c = getIntent().getStringArrayExtra("mesures")[i].substring(3);
-                        Log.i("oui", "c: " + c);
-                    }else if(Character.isDigit(quantitéIngredient.charAt(1))){
-                        c = getIntent().getStringArrayExtra("mesures")[i].substring(2);
-                        Log.i("oui", "c: " + c);
-                    }else if(Character.isDigit(quantitéIngredient.charAt(0))){
-                        c = getIntent().getStringArrayExtra("mesures")[i].substring(1);
-                    }else{
-                        c = getIntent().getStringArrayExtra("mesures")[i];
-                    }
-                }
-                Log.i(TAG, "mesure: " + c);
-                if(i%2==1) {
-                    listItem1.add(nomIngredient + " : " + b +" "+ c);
-                    adapter1.notifyDataSetChanged();
-                } else {
-                    listItem2.add(nomIngredient + " : " + b +" "+ c);
-                    adapter2.notifyDataSetChanged();
-                }
-            }
-        }
+        ingredientsRecette(2);
         RadioButton radio = findViewById(R.id.radioButton2);
+        radio.setChecked(true);
         RadioButton radio2 = findViewById(R.id.radioButton);
         RadioGroup radioGroup = findViewById(R.id.radio_group);
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the ID of the checked radio button
-                switch (checkedId) {
-                    //case radio:
-                        // Do something when radio button 1 is checked
-                        //break;
-                    //case radio2:
-                        // Do something when radio button 2 is checked
-                        //break;
-                    // Add more cases for additional radio buttons if needed
+                if (checkedId == R.id.radioButton2) {
+                    ingredientsRecette(2);
+                } else if (checkedId == R.id.radioButton) {
+                    ingredientsRecette(4);
                 }
             }
         });
@@ -135,6 +85,42 @@ public class Recette  extends Activity {
                 sauveDonnées(bdd, id);
             }
         });
+    }
+
+    public void ingredientsRecette(int nbPersonnes) {
+        listItem1.clear();
+        listItem2.clear();
+        for (int i = 1; i < getIntent().getStringArrayExtra("ingredients").length; i++) {
+            if (getIntent().getStringArrayExtra("ingredients")[i] != null) {
+                TextView textView = new TextView(this);
+                String nomIngredient = getIntent().getStringArrayExtra("ingredients")[i];
+                Log.i(TAG, "ingredient: " + nomIngredient);
+                int b = getNb(getIntent().getStringArrayExtra("mesures")[i]);
+                b *= nbPersonnes;
+                Log.i(TAG, "Quantité: " + b);
+                String c = " ";
+                String quantitéIngredient = getIntent().getStringArrayExtra("mesures")[i];
+                if (quantitéIngredient.length() >= 3) {
+                    if (Character.isDigit(quantitéIngredient.charAt(2))) {
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(3);
+                        Log.i("oui", "c: " + c);
+                    } else if (Character.isDigit(quantitéIngredient.charAt(1))) {
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(2);
+                        Log.i("oui", "c: " + c);
+                    } else if (Character.isDigit(quantitéIngredient.charAt(0))) {
+                        c = getIntent().getStringArrayExtra("mesures")[i].substring(1);
+                    } else {
+                        c = getIntent().getStringArrayExtra("mesures")[i];
+                    }
+                }
+                if (i % 2 == 1) {
+                    listItem1.add(nomIngredient + " : " + b + " " + c+"                  ");
+                } else {
+                    listItem2.add(nomIngredient + " : " + b + " " + c+"                  ");
+                }
+                adapter1.notifyDataSetChanged();
+            }
+        }
     }
 
 

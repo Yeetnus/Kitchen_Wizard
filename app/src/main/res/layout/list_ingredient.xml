@@ -10,7 +10,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="8"
-        android:gravity="center_vertical"
+        android:gravity="left|center_vertical"
         android:text="TextView"
+        android:textAlignment="textStart"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:gravity="right|center_vertical"
+        android:text="TextView"
+        android:textAlignment="viewEnd"
         android:textStyle="bold" />
 </LinearLayout>

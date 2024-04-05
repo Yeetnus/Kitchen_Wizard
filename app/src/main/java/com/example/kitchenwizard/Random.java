@@ -1,3 +1,4 @@
+/**
 package com.example.kitchenwizard;
 
 import android.content.Intent;
@@ -44,7 +45,7 @@ public class Random extends AppCompatActivity {
         Intent intent = new Intent(this, Recette.class);
         intent.putExtra("pokemon", valeur);
         startActivity(intent);
-    }*/
+    }
 
 
     @Override
@@ -60,11 +61,11 @@ public class Random extends AppCompatActivity {
         reroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String message=editText1.getText().toString();
-                Intent intent=new Intent();
-                intent.putExtra("MESSAGE",message);
-                setResult(2,intent);
-                finish();//finishing activity
+                //String message=editText1.getText().toString();
+                //Intent intent=new Intent();
+                //intent.putExtra("MESSAGE",message);
+                //setResult(2,intent);
+                //finish();//finishing activity
             }
         });
     }
@@ -76,3 +77,4 @@ public class Random extends AppCompatActivity {
         }
     }
 }
+ */

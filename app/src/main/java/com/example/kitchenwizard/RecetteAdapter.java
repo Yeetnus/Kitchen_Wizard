@@ -16,10 +16,12 @@ public class RecetteAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<String> mData;
+    private List<String> mData2;
 
-    public RecetteAdapter(Context context, List<String> data) {
+    public RecetteAdapter(Context context, List<String> data,List<String> data2) {
         mContext = context;
         mData = data;
+        mData2 = data2;
     }
 
     @Override
@@ -30,6 +32,10 @@ public class RecetteAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return mData.get(position);
+    }
+
+    public Object getItem2(int position) {
+        return mData2.get(position);
     }
 
     @Override
@@ -45,10 +51,16 @@ public class RecetteAdapter extends BaseAdapter {
         }
 
         TextView textView = convertView.findViewById(R.id.textView);
+        TextView textView2 = convertView.findViewById(R.id.textView3);
 
         String ingredientName =(String) getItem(position);
         textView.setText(ingredientName);
-
+        try{
+            String ingredientName2 = (String) getItem2(position);
+            textView2.setText(ingredientName2);
+        }catch(Exception e){
+            textView2.setText("");
+        }
         return convertView;
     }
 

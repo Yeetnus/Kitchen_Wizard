@@ -18,13 +18,9 @@
 
         <ListView
             android:id="@+id/list1"
-            android:layout_width="174dp"
+            android:layout_width="wrap_content"
             android:layout_height="126dp" />
 
-        <ListView
-            android:id="@+id/list2"
-            android:layout_width="match_parent"
-            android:layout_height="126dp" />
     </LinearLayout>
 
     <TextView
@@ -66,13 +62,13 @@
                 android:id="@+id/radioButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="RadioButton" />
+                android:text="Pour 2 personnes" />
 
             <RadioButton
                 android:id="@+id/radioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="RadioButton" />
+                android:text="Pour 4 personnes" />
         </RadioGroup>
     </LinearLayout>
 

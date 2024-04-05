@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.recetteRandom) {
-            Intent intent = new Intent(this, RecetteRandom.class);
-            startActivity(intent);
-            return true;
+            //Intent intent = new Intent(this, RecetteRandom.class);
+            //startActivity(intent);
+            //return true;
         } else if (item.getItemId() == R.id.recettes) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements RecipeFetcher.Rec
         } else {
             return super.onOptionsItemSelected(item);
         }
+        return false;
     }
 
     public static Recipe patata(int id) {
